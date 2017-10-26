@@ -11,17 +11,6 @@
 
 <h1>Color Picker</h1>
 
-<!-- <form action="index.php" method="post">
-Color: <input type="text" name="Color"><br>
-Hex: <input type="text" name="Hex"><br>
-<input type="submit">
-</form> -->
-
-<?php
-$colorErr = $hexErr = "";
-$color_input = $hex_input = "";
-?>
-
 <form method="post" action="index.php" name="insert">  
   Color: <input type="text" name="color_name" >
 
@@ -34,24 +23,50 @@ $color_input = $hex_input = "";
 
 <?php
 
-
-
-
 // DATABASE FUNCTIONS
-function getDb() {
-        $db = pg_connect("host=localhost port=5432 dbname=colorpicker user=coloruser password=colorcolorcolor");
+// function getDb() {
+//         $db = pg_connect("host=localhost port=5432 dbname=colorpicker user=coloruser password=colorcolorcolor");
   
-        return $db;
-    }
-	//Make a request.
-	function getInventory() {
-	    $request = pg_query(getDb(), "
-	        SELECT *
-	        FROM colors	        
-	    ");
-	    // Return a fetch to use the data.
-	    return pg_fetch_all($request);
+//         return $db;
+//     }
+// 	//Make a request.
+// 	function getInventory() {
+// 	    $request = pg_query(getDb(), "
+// 	        SELECT *
+// 	        FROM colors	        
+// 	    ");
+// 	    // Return a fetch to use the data.
+// 	    return pg_fetch_all($request);
+// 	}
+
+	if ($_POST['submit']) {
+		
+		$db = pg_connect("host=localhost port=5432 dbname=colorpicker user=coloruser password=colorcolorcolor");
+
+
+    	if (!$db) {
+
+        	die("Error in connection: " . pg_last_error());	
+        }
+
+        $color_name = pg_escape_string($_POST['color_name']);
+
+        $color_hex = pg_escape_string($_POST['color_hex'])
+	
+		//$stuff = "INSERT INTO colors (color_name, color_hex) VALUES ('$color_name', '$color_hex');";
+
+		$result = pg_query($db, "INSERT INTO 'colors' ('color_name', 'color_hex') VALUES ('$color_name', '$color_hex');");
+	
+		if (!$result) {
+			 die("Error in SQL query: " . pg_last_error());
+		}
+		 echo "Data successfully inserted!";
+
+		 pg_free_result($result);
+
+		 pg_close($db);
 	}
+	 
 	   //var_dump(getInventory());
 
 ?>
