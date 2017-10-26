@@ -20,53 +20,30 @@ Hex: <input type="text" name="Hex"><br>
 <?php
 $colorErr = $hexErr = "";
 $color_input = $hex_input = "";
-
-if ($_SERVER["REQUEST_METHOD"] == "POST") {
-  if (empty($_POST["name"])) {
-    $colorErr = "Color is required";
-  } else {
-    $color_input = test_input($_POST["color_name"]);
-    // check if name only contains letters and whitespace
-    if (!preg_match("/^[a-zA-Z ]*$/",$color_input)) {
-      $colorErr = "Only letters and white space allowed"; 
-    }
-  }
-
-if ($_SERVER["REQUEST_METHOD"] == "POST") {
-  if (empty($_POST["hex_input"])) {
-    $hexErr = "Hex is required";
-  } else {
-    $hex_input = test_input($_POST["color_hex"]);
-    // check if name only contains letters and whitespace
-    if (!preg_match("/^[a-zA-Z ]*$/",$hex_input)) {
-      $hexErr = "Only letters and white space allowed"; 
-    }
-  }
-}
-function test_input($data) {
-  $data = trim($data);
-  $data = stripslashes($data);
-  $data = htmlspecialchars($data);
-  return $data;
-}
 ?>
-<form method="post" action="<?php echo htmlspecialchars($_SERVER["PHP_SELF"]);?>">  
-  Color: <input type="text" name="Color" value="<?php echo $color_input;?>">
-  <span class="error">* <?php echo $colorErr;?></span>
+
+<form method="post" action="index.php" name="insert">  
+  Color: <input type="text" name="color_name" >
+
   <br><br>
-  Hex: <input type="text" name="hex" value="<?php echo $hex_input;?>">
-  <span class="error">* <?php echo $hexErr;?></span>
+  Hex: <input type="text" name="color_hex">
+ 
   <br><br>
-  <input type="submit" name="submit" value="Submit">  
+  <input type="submit">  
 </form>
 
 <?php
+
+
+
+
+// DATABASE FUNCTIONS
 function getDb() {
         $db = pg_connect("host=localhost port=5432 dbname=colorpicker user=coloruser password=colorcolorcolor");
   
         return $db;
     }
-Make a request.
+	//Make a request.
 	function getInventory() {
 	    $request = pg_query(getDb(), "
 	        SELECT *
@@ -75,7 +52,7 @@ Make a request.
 	    // Return a fetch to use the data.
 	    return pg_fetch_all($request);
 	}
-	   var_dump(getInventory());
+	   //var_dump(getInventory());
 
 ?>
 	<div>
